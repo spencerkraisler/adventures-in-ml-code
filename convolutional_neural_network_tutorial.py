@@ -1,6 +1,12 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
+old_v = tf.logging.get_verbosity()
+tf.logging.set_verbosity(tf.logging.ERROR)
 from tensorflow.examples.tutorials.mnist import input_data
+mnist = input_data.read_data_sets("/tmp/data/", one_hot = True)
+tf.logging.set_verbosity(old_v)
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def run_cnn():
@@ -43,7 +49,7 @@ def run_cnn():
     dense_layer2 = tf.matmul(dense_layer1, wd2) + bd2
     y_ = tf.nn.softmax(dense_layer2)
 
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=dense_layer2, labels=y))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=dense_layer2, labels=y))
 
     # add an optimiser
     optimiser = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cross_entropy)
